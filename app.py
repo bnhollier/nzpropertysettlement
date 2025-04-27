@@ -1,39 +1,58 @@
 import streamlit as st
 from calculations import calculate_apportionments
 from pdf_generator import generate_pdf
+from datetime import datetime
 
 st.set_page_config(page_title="NZ Property Settlement Tool", layout="centered")
 st.title("🏡 NZ Property Settlement Statement Generator")
 
-st.markdown("Enter the details below to generate a professional settlement statement PDF.")
+st.markdown("Enter the details below to generate a professional settlement statement.")
 
 # Sample councils list (can be expanded later)
 local_councils = [
-    "Auckland Council", "Far North District Council", "Wellington City Council", "Whangarei District Council", "Christchurch City Council",
-    "Hamilton City Council", "Tauranga City Council", "Dunedin City Council"
+    "Tauranga City Council",
+    "Auckland Council",
+    "Christchurch City Council",
+    "Dunedin City Council",
+    "Far North District Council",
+    "Hamilton City Council",
+    "Wellington City Council",
+    "Whangarei District Council"
 ]
+
 regional_councils = [
-    "Auckland Regional Council", "Wellington Regional Council", "Canterbury Regional Council",
-    "Waikato Regional Council", "Bay of Plenty Regional Council", "Otago Regional Council"
+    "Bay of Plenty Regional Council", "Canterbury Regional Council",
+     "Otago Regional Council", "Waikato Regional Council"
 ]
 
 with st.form("settlement_form"):
-    property_address = st.text_input("Property Address")
-    local_council = st.selectbox("Local Council", options=local_councils)
+    #client info
+    st.header("Client Information")
+    client_name = st.text_input("Client Name", value="Mike Ross")
+    client_address = st.text_input("Client Address", value="147 Pioneer Street, Bethlehem, Tauranga")
+    
+    #deal info
+    st.header("Transaction")
+    property_address = st.text_input("Property Address", value="130 Maunganui Road, Mount Maunganui")
+    purchase_price = st.number_input("Purchase Price", value=float(1500000))
+    deposit = st.number_input("Deposit", value=float(150000))
+    settlement_date = st.date_input("Settlement Date", value=datetime.now().date())
+
+    #council info
+    st.header("Rates Information")
+    local_council = st.selectbox("District Council", options=local_councils)
+    local_yearly_rates = st.number_input("District Council Rates", min_value=0.0)
+    
     regional_council = st.selectbox("Regional Council", options=regional_councils)
+    regional_yearly_rates = st.number_input("Regional Council Rates", min_value=0.0)
     
-    # Separate inputs for local and regional council rates
-    local_yearly_rates = st.number_input("Local Council Yearly Rates Amount (NZD)", min_value=0.0)
-    regional_yearly_rates = st.number_input("Regional Council Yearly Rates Amount (NZD)", min_value=0.0)
-    
-    settlement_date = st.date_input("Settlement Date")
-    purchase_price = st.number_input("Purchase Price (NZD)", min_value=0.0)
-    gst_applicable = st.checkbox("Is GST Applicable?")
-    adjustments = st.text_area("Any Adjustments (optional)", placeholder="e.g. Water charges, Rubbish collection")
+    #gst_applicable = st.checkbox("Is GST Applicable?")
+    #adjustments = st.text_area("Any Adjustments (optional)", placeholder="e.g. Water charges, Rubbish collection")
 
     submitted = st.form_submit_button("Generate Statement")
 
 if submitted:
+
     # Get local and regional apportionments
     apportionments = calculate_apportionments(local_council, local_yearly_rates, regional_council, regional_yearly_rates, settlement_date)
     
@@ -49,16 +68,24 @@ if submitted:
 
     # Generate the PDF with detailed results
     pdf_bytes = generate_pdf(
-        property_address,
-        local_yearly_rates,  # passing local rates
-        local_council,
-        regional_council,
-        settlement_date,
-        purchase_price,
-        gst_applicable,
-        adjustments,
-        local_vendor_days, local_vendor_amount, local_purchaser_days, local_purchaser_amount,
-        regional_vendor_days, regional_vendor_amount, regional_purchaser_days, regional_purchaser_amount
+    property_address, 
+    purchase_price, 
+    client_name, 
+    client_address,
+    local_yearly_rates,
+    regional_yearly_rates,
+    local_council,
+    regional_council,
+    local_purchaser_days,
+    regional_purchaser_days,
+    local_purchaser_amount,
+    regional_purchaser_amount,
+    local_vendor_days,
+    regional_vendor_days,
+    local_vendor_amount,
+    regional_vendor_amount,
+    settlement_date,
+    deposit
     )
 
     # Display results on the UI
