@@ -29,7 +29,9 @@ def generate_pdf(
     local_vendor_amount, 
     regional_vendor_amount, 
     settlement_date, 
-    deposit=None, 
+    deposit=None,
+    local_installment_paid=False,
+    regional_installment_paid=False
     ):
     
     # Initialize the PDF object
@@ -94,13 +96,20 @@ def generate_pdf(
         pdf.ln(row_height)
 
     # Add Table Rows (the required entries)
-    add_row("Purchase Price", amount=purchase_price)
+    add_row("DEBIT: Purchase Price", amount=purchase_price)
 
-    add_row(f"{local_council} Rates: {local_purchaser_days} days", amount=local_purchaser_amount)
-    add_row(f"{regional_council} Rates: {regional_purchaser_days} days", amount=regional_purchaser_amount)
+    if local_installment_paid == True:
+        add_row(f"DEBIT: {local_council} Rates: {local_purchaser_days} days", amount=local_purchaser_amount)
+    else:
+        add_row(f"CREDIT: {local_council} Rates: {local_vendor_days} days", amount=local_vendor_amount)
     
+    if regional_installment_paid == True:
+        add_row(f"DEBIT: {regional_council} Rates: {regional_purchaser_days} days", amount=regional_purchaser_amount)
+    else:
+        add_row(f"CREDIT: {regional_council} Rates: {regional_vendor_days} days", amount=regional_vendor_amount)
+
     if deposit:
-        add_row("Less Deposit Paid", amount=deposit)
+        add_row("CREDIT: Less Deposit Paid", amount=deposit)
 
     # Always include the "Balance required to settle"
     add_row("Balance required to settle", amount=purchase_price - (deposit or 0), bold=True)
@@ -124,11 +133,12 @@ def generate_pdf(
     pdf.set_font("Arial", size=12)
     pdf.multi_cell(0, 8, f"{local_council} Rates Calculation @ ${local_yearly_rates} / year:\n\n"
                          f"Purchaser: ${local_purchaser_amount} | Days: {local_purchaser_days}\n"
-                         f"Vendor: ${local_vendor_amount} | Days: {local_vendor_days}\n\n"
+                         f"Vendor: ${local_vendor_amount} | Days: {local_vendor_days}\n"
+                         f"Installment Paid? {local_installment_paid}\n\n"
                          f"{regional_council} Rates Calculation @ ${regional_yearly_rates} / year:\n\n"
                          f"Purchaser: ${regional_purchaser_amount} | Days: {regional_purchaser_days}\n"
-                         f"Vendor: ${regional_vendor_amount} | Days: {regional_vendor_days}\n")
-
+                         f"Vendor: ${regional_vendor_amount} | Days: {regional_vendor_days}\n"
+                         f"Installment Paid? {regional_installment_paid}\n\n")
     # Output the PDF
     pdf_output = pdf.output(dest='S').encode('latin1')
     return pdf_output
