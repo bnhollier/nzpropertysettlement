@@ -21,6 +21,7 @@ local_councils = [
 
 regional_councils = [
     "Bay of Plenty Regional Council"
+    "Waikato Regional Council"
 ]
 
 # --- Input Form (Keep As Is) ---
