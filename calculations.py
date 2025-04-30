@@ -19,6 +19,7 @@ COUNCIL_RATING_SYSTEMS = {
     "Rotorua District Council": "quarterly",
     "Taupo District Council": "quarterly", #doing 3 quarterly periods until 30 June 2025
     #"Wellington Regional Council": "annual",
+    "Waikato Regional Council": "annual",
     "Western Bay of Plenty District Council": "six-monthly",
     #"Canterbury Regional Council": "six-monthly",
     #"Waikato Regional Council": "quarterly",
