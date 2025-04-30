@@ -24,7 +24,7 @@ regional_councils = [
 
 # --- Input Form (Keep As Is) ---
 with st.form("settlement_form"):
-    st.header("👋 Hi Simon, let's go!")
+    st.header("👋 Hi there, let's go!")
 
     # Use current date as default
     today = datetime.now().date()
