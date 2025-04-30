@@ -13,6 +13,7 @@ local_councils = [
     "Tauranga City Council",
     "Kawerau District Council",
     "Opotiki District Council",
+    "Rotorua District Council",
     "Taupo District Council",
     "Western Bay of Plenty District Council",
     "Whakatane District Council",

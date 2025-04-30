@@ -16,6 +16,7 @@ COUNCIL_RATING_SYSTEMS = {
     #"Auckland Regional Council": "annual",
     "Kawerau District Council": "quarterly",
     "Opotiki District Council": "six-monthly",
+    "Rotorua District Council": "quarterly",
     "Taupo District Council": "quarterly", #doing 3 quarterly periods until 30 June 2025
     #"Wellington Regional Council": "annual",
     "Western Bay of Plenty District Council": "six-monthly",
